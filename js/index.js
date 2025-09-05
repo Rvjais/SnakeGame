@@ -147,3 +147,36 @@ window.addEventListener('keydown', e =>{
     }
 
 });
+
+
+// Difficulty Buttons
+let easyBtn = document.getElementById('easy');
+let mediumBtn = document.getElementById('medium');
+let hardBtn = document.getElementById('hard');
+
+easyBtn.addEventListener('click', () => {
+    speed = 5;
+    startGame();
+});
+
+mediumBtn.addEventListener('click', () => {
+    speed = 10;
+    startGame();
+});
+
+hardBtn.addEventListener('click', () => {
+    speed = 15;
+    startGame();
+});
+let currentDifficulty = document.getElementById('current-difficulty');
+function startGame() {
+    if (speed === 5) {
+        currentDifficulty.textContent = 'Easy';
+    } else if (speed === 10) {
+        currentDifficulty.textContent = 'Medium';
+    } else if (speed === 15) {
+        currentDifficulty.textContent = 'Hard';
+    }
+    alert(`Game started with ${currentDifficulty.textContent} difficulty!`);
+}
+
