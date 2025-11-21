@@ -1,5 +1,24 @@
+// ============================================
+// IMAGE CONFIGURATION - Change images here!
+// ============================================
+// To use images, set useImages to true and provide image paths
+// For circular snake, use a circular image file
+const imageConfig = {
+    useImages: false,  // Set to true to use images instead of colors
+
+    // Snake head image (circular or any shape)
+    snakeHead: 'img/snake-head.png',  // Change this path to your image
+
+    // Snake body image (circular or any shape)
+    snakeBody: 'img/snake-body.png',  // Change this path to your image
+
+    // Food image
+    food: 'img/food.png'  // Change this path to your food image
+};
+// ============================================
+
 // Game Constants & Variables
-let inputDir = {x: 0, y: 0}; 
+let inputDir = {x: 0, y: 0};
 const foodSound = new Audio('music/food.mp3');
 const gameOverSound = new Audio('music/gameover.mp3');
 const moveSound = new Audio('music/move.mp3');
@@ -85,9 +104,19 @@ function gameEngine(){
 
         if(index === 0){
             snakeElement.classList.add('head');
+            // Apply image if enabled
+            if(imageConfig.useImages && imageConfig.snakeHead){
+                snakeElement.classList.add('with-image');
+                snakeElement.style.backgroundImage = `url('${imageConfig.snakeHead}')`;
+            }
         }
         else{
             snakeElement.classList.add('snake');
+            // Apply image if enabled
+            if(imageConfig.useImages && imageConfig.snakeBody){
+                snakeElement.classList.add('with-image');
+                snakeElement.style.backgroundImage = `url('${imageConfig.snakeBody}')`;
+            }
         }
         board.appendChild(snakeElement);
     });
@@ -95,7 +124,12 @@ function gameEngine(){
     foodElement = document.createElement('div');
     foodElement.style.gridRowStart = food.y;
     foodElement.style.gridColumnStart = food.x;
-    foodElement.classList.add('food')
+    foodElement.classList.add('food');
+    // Apply image if enabled
+    if(imageConfig.useImages && imageConfig.food){
+        foodElement.classList.add('with-image');
+        foodElement.style.backgroundImage = `url('${imageConfig.food}')`;
+    }
     board.appendChild(foodElement);
 
 
@@ -179,4 +213,57 @@ function startGame() {
     }
     alert(`Game started with ${currentDifficulty.textContent} difficulty!`);
 }
+
+// ============================================
+// Mobile Control Buttons
+// ============================================
+function handleDirection(x, y) {
+    // Prevent reverse direction
+    if (inputDir.x === 0 && inputDir.y === 0) {
+        // Game not started, allow any direction
+        inputDir = {x: x, y: y};
+        moveSound.play();
+        return;
+    }
+
+    // Prevent going opposite direction
+    if (x !== 0 && inputDir.x !== -x) {
+        inputDir = {x: x, y: 0};
+        moveSound.play();
+    } else if (y !== 0 && inputDir.y !== -y) {
+        inputDir = {x: 0, y: y};
+        moveSound.play();
+    }
+}
+
+// Get mobile control buttons
+const btnUp = document.getElementById('btn-up');
+const btnDown = document.getElementById('btn-down');
+const btnLeft = document.getElementById('btn-left');
+const btnRight = document.getElementById('btn-right');
+
+// Add touch and click events for mobile controls
+btnUp.addEventListener('click', () => handleDirection(0, -1));
+btnUp.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    handleDirection(0, -1);
+});
+
+btnDown.addEventListener('click', () => handleDirection(0, 1));
+btnDown.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    handleDirection(0, 1);
+});
+
+btnLeft.addEventListener('click', () => handleDirection(-1, 0));
+btnLeft.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    handleDirection(-1, 0);
+});
+
+btnRight.addEventListener('click', () => handleDirection(1, 0));
+btnRight.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    handleDirection(1, 0);
+});
 
